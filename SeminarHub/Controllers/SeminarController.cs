@@ -307,7 +307,7 @@ namespace SeminarHub.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> DeleteConfirmed( int id)
+		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			var seminar = await data.Seminars
 				.Where(s=>s.Id==id)
@@ -324,11 +324,11 @@ namespace SeminarHub.Controllers
 				return Unauthorized();
 			}
 
-			if (seminar.SeminarsParticipants.Any())
+			var seminarParticipants = seminar.SeminarsParticipants;
+			if (seminarParticipants.Any())
 			{
-				return BadRequest();
+				data.RemoveRange(seminarParticipants);
 			}
-
 			data.Remove(seminar);
 			await data.SaveChangesAsync();
 
